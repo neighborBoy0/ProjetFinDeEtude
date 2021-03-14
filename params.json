@@ -1,0 +1,9 @@
+{
+	"alpha": 0.4,
+	"beta": 0.3,
+	"gamma": -0.3,
+	"delta": -0.3,
+	"zeta": 0.6,
+	"first_level": [6 3 0.2 0.6],
+	"second_level": [7 2 0.3 0.6]
+}
