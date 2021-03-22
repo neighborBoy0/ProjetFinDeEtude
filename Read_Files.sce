@@ -6,7 +6,7 @@ funcprot(0);
 // origin: a 1*3 matrix, the origin position of the end effector
 // destination: a 1*3 matrix, the destination position of the end effector
 // obstacle: a n*3 matrix, the position of the obstacles, there are n obstacle
-function [origin, destination, obstacles, joints] = Read_Robot(file_name)
+function [origin, destination, obstacles, joints, joints_origin] = Read_Robot(file_name)
     try
         data = mgetl(file_name);
         mystruct = JSONParse(data);
@@ -14,6 +14,7 @@ function [origin, destination, obstacles, joints] = Read_Robot(file_name)
         destination = mystruct.destination;
         obstacles = mystruct.obstacles;
         joints = mystruct.joints;
+        joints_origin = mystruct.joints_origin;
     catch
         [error_message,error_number]=lasterror(%t);
         disp("There is an error in function Read_File, error message:" + error_message);

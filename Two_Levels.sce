@@ -4,7 +4,7 @@ path = get_absolute_file_path("Two_Levels.sce");
 exec(path + "Functions.sce");
 
 // geneation of trajectoire by bigenetic algorithm
-function Two_Levels(destination, obstacle)
+function Two_Levels(destination, obstacle, joints_origin)
     Xc = [0 0 0];                 // found by the second level
 
     size_obstacle = size(obstacle);
@@ -32,6 +32,8 @@ function Two_Levels(destination, obstacle)
         ga_params_1 = add_param(ga_params_1, "dimension", 3);
         ga_params_1 = add_param(ga_params_1, 'minbound', CPosition-[0.1 0.1 0.1]);
         ga_params_1 = add_param(ga_params_1, 'maxbound', CPosition+[0.1 0.1 0.1]);
+        ga_params_1 = add_param(ga_params_1, 'N', N);
+        ga_params_1 = add_param(ga_params_1, 'joints_origin', joints_origin);
     catch
         [error_message,error_number]=lasterror(%t)
         disp("There is an error in function TwoLevel when add some params to the 1st algo genetic, error message:" + error_message);
@@ -67,6 +69,6 @@ function result = firstLevel(CPosition, FPosition, Xc, M, N)
     result = alpha_variable * F1(CPosition, FPosition) + beta_variable * (CPosition - Xc) + gamma_variable * F2(M, N);
 endfunction
 
-function result = secondLevel(Q)
-    result = delta_variable * F3(Q);
+function result = secondLevel(Q, N, joints_origin)
+    result = delta_variable * F3(Q) + zeta_variable * F4(Q, N, joints_origin);
 endfunction

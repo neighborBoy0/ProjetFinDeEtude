@@ -205,6 +205,14 @@ function [pop_opt, fobj_pop_opt, pop_init, fobj_pop_init] = my_optim_moga(ga_f, 
         crossover_probability_2 = second_level_params(1,4);     // Crossover probability of the 1st level
         
         try
+            N = get_param(param,"N",6);
+            joints_origin = get_param(param, "joints_origin", [0 0 0 0 0 0]);
+            disp(joints_origin);
+        catch
+            disp("There is an error in read param in 1st level to call 2nd level");
+        end
+        
+        try
             ga_params_2 = init_param();
             ga_params_2 = add_param(ga_params_2, "dimension", 6);
             ga_params_2 = add_param(ga_params_2, 'minbound', min_angle);
@@ -215,7 +223,8 @@ function [pop_opt, fobj_pop_opt, pop_init, fobj_pop_init] = my_optim_moga(ga_f, 
         end
         
         try
-            [pop_opt_2, fobj_pop_opt_2] = optim_moga(secondLevel, population_size_2, number_generations_2, mutation_rate_2, crossover_probability_2, %T, ga_params_2);
+            myObjFun_2 = list(secondLevel, N, joints_origin);
+            [pop_opt_2, fobj_pop_opt_2] = optim_moga(myObjFun_2, population_size_2, number_generations_2, mutation_rate_2, crossover_probability_2, %T, ga_params_2);
             [fmin_2, k_2] = min(fobj_pop_opt_2);        // the result of algo genetic
             theta_min = pop_opt_2(k_2);
             disp(theta_min);
