@@ -49,6 +49,10 @@ function result = F3(Q)
     result = sqrt(det(J * J'));
 endfunction
 
-function F4()
-    
+function result = F4(Q, N, joints_origin)
+    temp = 0;
+    for i=1:N
+        temp=temp+(Q(i) - joints_origin(i))^2;
+    end
+    result = temp / 2;
 endfunction
