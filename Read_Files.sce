@@ -6,6 +6,8 @@ funcprot(0);
 // origin: a 1*3 matrix, the origin position of the end effector
 // destination: a 1*3 matrix, the destination position of the end effector
 // obstacle: a n*3 matrix, the position of the obstacles, there are n obstacle
+// joints: The maximum and minimum angle that each joint can rotate.
+// joints_origin: The joint rotation angle of the starting position.
 function [origin, destination, obstacles, joints, joints_origin] = Read_Robot(file_name)
     try
         data = mgetl(file_name);
@@ -21,6 +23,16 @@ function [origin, destination, obstacles, joints, joints_origin] = Read_Robot(fi
     end
 endfunction
 
+
+// read json file, the parameters of two levels
+//
+// alpha_variable: un paramètre de premier niveau
+// beta_variable: un paramètre de premier niveau
+// gamma_variable: un paramètre de premier niveau
+// delta_variable: un paramètre de deuxième niveau
+// zeta_variable: un paramètre de deuxième niveau
+// first_level: des paramètre de premier algo génétique 
+// second_level: des paramètre de deuxième algo génétique
 function [alpha_variable, beta_variable, gamma_variable, delta_variable, zeta_variable, first_level, second_level] = Read_Params(file_name)
     try
         data = mgetl(file_name);

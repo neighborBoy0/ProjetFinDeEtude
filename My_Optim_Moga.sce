@@ -1,4 +1,20 @@
-function [pop_opt, fobj_pop_opt, pop_init, fobj_pop_init] = my_optim_moga(ga_f, pop_size, nb_generation, p_mut, p_cross, Log, param)
+// Mettre en œuvre un algorithme génétique
+//
+// ga_f: Une liste qui comprend le pointeur de la fonction cible et plusieurs paramètres ou la fonction objectif.
+// pop_size: Le nombre de population.
+// nb_generation: Le nombre de generation.
+// p_mut: La probabilité de mutation.
+// p_cross: La probabilité de croisement.
+// Log: Si %T, appellera la fonction de sortie à la fin de chaque itération.
+// param: Une liste de paramètres.
+// 
+// pop_opt: La population d'individus optimaux.
+// fobj_pop_opt: L'ensemble des valeurs de fonctions multi-objectifs associées à pop_opt.
+// pop_init: La population initiale d'individus.
+// fobj_pop_init: L'ensemble des valeurs de fonctions multi-objectifs associées à pop_init.
+// theta_results: La solution optimale calculée par l'algorithme génétique de second niveau est exécutée à chaque fois.
+
+function [pop_opt, fobj_pop_opt, pop_init, fobj_pop_init, theta_results] = my_optim_moga(ga_f, pop_size, nb_generation, p_mut, p_cross, Log, param)
 
     [nargout, nargin] = argn();
 
@@ -13,12 +29,14 @@ function [pop_opt, fobj_pop_opt, pop_init, fobj_pop_init] = my_optim_moga(ga_f, 
     [selection_func,err] = get_param(param,"selection_func",selection_ga_elitist);
     [nb_couples,err]     = get_param(param,"nb_couples",100);
     [pressure,err]       = get_param(param,"pressure",0.05);
-    [output_func, err] = get_param(param, "output_func", output_moga_default);
+    [output_func, err]   = get_param(param, "output_func", output_moga_default);
+    theta_results = []
 
     if ~isdef("ga_f","local") then
         error(gettext("optim_moga: ga_f is mandatory"));
     else
         if typeof(ga_f)=="list" then
+            disp(ga_f(2:$));
             deff("y=_ga_f(x)","y=ga_f(1)(x, ga_f(2:$))");
         else
             deff("y=_ga_f(x)","y=ga_f(x)");
@@ -78,6 +96,8 @@ function [pop_opt, fobj_pop_opt, pop_init, fobj_pop_init] = my_optim_moga(ga_f, 
 
     if (nargout==4) then
         fobj_pop_init = MO_FObj_Pop;
+    else
+        fobj_pop_init = -1;
     end
 
     // The genetic algorithm
@@ -194,11 +214,9 @@ function [pop_opt, fobj_pop_opt, pop_init, fobj_pop_init] = my_optim_moga(ga_f, 
             end
         end
         
-        
-        
-        
-        
-        /////////
+        // 
+        //Appelez l'algorithme génétique de deuxième niveau et calculez.
+        // 
         population_size_2 = second_level_params(1,1);           // Population size of the 1st level
         number_generations_2 = second_level_params(1,2);        // Number of generations of the 1st level
         mutation_rate_2 = second_level_params(1,3);             // Mutation rate of the 1st level
@@ -215,6 +233,7 @@ function [pop_opt, fobj_pop_opt, pop_init, fobj_pop_init] = my_optim_moga(ga_f, 
         try
             ga_params_2 = init_param();
             ga_params_2 = add_param(ga_params_2, "dimension", 6);
+
             ga_params_2 = add_param(ga_params_2, 'minbound', min_angle);
             ga_params_2 = add_param(ga_params_2, 'maxbound', max_angle);
         catch
@@ -229,18 +248,13 @@ function [pop_opt, fobj_pop_opt, pop_init, fobj_pop_init] = my_optim_moga(ga_f, 
             theta_min = pop_opt_2(k_2);
             disp(theta_min);
             
-            theta_result = [theta_result; theta_min];
+            theta_results = [theta_results; theta_min];
             
         catch
             [error_message,error_number]=lasterror(%t)
             disp("There is an error in function TwoLevel when the 1st algo genetic runs, error message:" + error_message);
         end
-        
-        
-        
-        
-        
-        
+
     end
     pop_opt      = codage_func(Pop, 'decode', param);
     fobj_pop_opt = MO_FObj_Pop;

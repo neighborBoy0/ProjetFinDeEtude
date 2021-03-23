@@ -3,6 +3,9 @@ mode(-1);
 
 
 // the position error between the current and final positions for the end effector
+// 
+// CPosition: Cartesian coordinates of the current position.
+// FPosition: Cartesian coordinates of the end point.
 function result = F1(CPosition, FPosition)
     try
         positions = [CPosition; FPosition];
@@ -36,7 +39,7 @@ endfunction
 
 // The purpose of this term is to maximize the manipulability of the robot
 //
-// Q: 
+// Q: Each joint angle.
 function result = F3(Q)
     // Q = []
     // loop = size(robot.links);        // the number of joints
@@ -49,6 +52,11 @@ function result = F3(Q)
     result = sqrt(det(J * J'));
 endfunction
 
+// To minimize the variation of joint variables, in order to obtain small movements
+// 
+// Q: Each joint angle.
+// N: The number of joints
+// joints_origin: The angle of each joint in the previous position.
 function result = F4(Q, N, joints_origin)
     temp = 0;
     for i=1:N
