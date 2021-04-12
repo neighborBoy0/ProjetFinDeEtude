@@ -45,7 +45,7 @@ function Two_Levels(destination, obstacle, joints_origin)
         
     try
         // the goal function of 1st level, and incoming parameters.
-        myObjFun_1= list(firstLevel, FPosition, Xc, M, N);
+        myObjFun_1= list(firstLevel, FPosition, Xc, M, N, obstacle);
         
         path = get_absolute_file_path("main.sce");
         exec(path + "my_optim_moga.sce");
@@ -71,9 +71,9 @@ endfunction
 // Xc: used to take into account the error found by both levels for the same position of the end effector. found by the 2nd level
 // M: the number of obstacles
 // N: the total number of control points
-function result = firstLevel(CPosition, FPosition, Xc, M, N)
+function result = firstLevel(CPosition, FPosition, Xc, M, N, obstacle)
     // 1st level in book: min(x)F(X, theta) = alpha * F1(X) + beta * (X - Xc) + gamma * F2(theta)
-    result = alpha_variable * F1(CPosition, FPosition) + beta_variable * (CPosition - Xc) + gamma_variable * F2(M, N);
+    result = alpha_variable * F1(CPosition, FPosition) + beta_variable * (CPosition - Xc) + gamma_variable * F2(M, N, obstacle);
 endfunction
 
 // The objectif function of the second level

@@ -13,7 +13,7 @@ global zeta_variable;
 global first_level_params;
 global second_level_params;
 
-robot = p560;
+//robot = p560;
 
 path = get_absolute_file_path("Main.sce");
 exec(path + "Read_Files.sce");

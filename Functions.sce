@@ -20,13 +20,14 @@ endfunction
 //
 // M is the number of obstacles
 // N is the total number of control points
-function result = F2(M, N)
+// obstacle is the position of obstacles
+function result = F2(M, N, obstacle)
     try
         f2 = 0
         // calcule sum of the euclidean distance between each joint and each obstacles 
         for i=1:N
             for j=1:M
-                positions = [robot.links(i).r; [0.5, 0.5, 0.5]]; // Suppose there is only one obstacle at 0.5, 0.5, 0.5
+                positions = [robot.links(i).r; obstacle(j, :)]; // Suppose there is only one obstacle at 0.5, 0.5, 0.5
                 f2 = f2 + nan_pdist(positions, 'euclidean');
             end
         end
